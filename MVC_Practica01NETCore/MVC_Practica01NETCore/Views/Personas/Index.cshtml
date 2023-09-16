@@ -1,0 +1,46 @@
+﻿@model IEnumerable<MVC_Practica01NETCore.Models.Persona>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Tipo de Documento</th>
+            <th>DNI</th>
+            <th>Carnet Extranjero</th>
+            <th>Pasaporte</th>
+            <th>Fecha de Nacimiento</th>
+            <th>Edad</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+ @foreach (var persona in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => persona.Nombre)</td>
+                <td>@Html.DisplayFor(modelItem => persona.Apellido)</td>
+                <td>@Html.DisplayFor(modelItem => persona.TipoDocumento)</td>
+                <td>@Html.DisplayFor(modelItem => persona.Dni)</td>
+                <td>@Html.DisplayFor(modelItem => persona.CarnetExtranjero)</td>
+                <td>@Html.DisplayFor(modelItem => persona.Pasaporte)</td>
+                <td>@(persona.FechaNacimiento.HasValue ? persona.FechaNacimiento.Value.ToString("dd MMMM yyyy") : "")</td>
+                <td>@persona.Edad</td>
+                <td>
+                <a asp-action="Edit" class = "btn btn-warning" asp-route-id="@persona.Id">Editar</a> 
+                <a asp-action="Details" class="btn btn-warning" asp-route-id="@persona.Id">Detalles</a> 
+                <a asp-action="Delete" class="btn btn-warning" asp-route-id="@persona.Id">Eliminar</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
