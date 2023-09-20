@@ -1,15 +1,15 @@
 ﻿@model IEnumerable<MVC_Practica01NETCore.Models.Persona>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "CRUD Personas";
 }
 
-<h1>Index</h1>
+<h1>Registros</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-success">Crear nuevo Registro</a>
 </p>
-<table class="table">
+<table class="table table-striped">
     <thead>
         <tr>
             <th>Nombre</th>
@@ -20,7 +20,7 @@
             <th>Pasaporte</th>
             <th>Fecha de Nacimiento</th>
             <th>Edad</th>
-            <th>Acciones</th>
+            <th class="Centrar">Acciones</th>
         </tr>
     </thead>
     <tbody>
@@ -35,11 +35,11 @@
                 <td>@Html.DisplayFor(modelItem => persona.Pasaporte)</td>
                 <td>@(persona.FechaNacimiento.HasValue ? persona.FechaNacimiento.Value.ToString("dd MMMM yyyy") : "")</td>
                 <td>@persona.Edad</td>
-                <td>
-                <a asp-action="Edit" class = "btn btn-warning" asp-route-id="@persona.Id">Editar</a> 
-                <a asp-action="Details" class="btn btn-warning" asp-route-id="@persona.Id">Detalles</a> 
-                <a asp-action="Delete" class="btn btn-warning" asp-route-id="@persona.Id">Eliminar</a>
-            </td>
+                   <td class="text-center">
+                         <a asp-action="Edit" class = "btn btn-warning" asp-route-id="@persona.Id">Editar</a> 
+                        <a asp-action="Details" class="btn btn-info" asp-route-id="@persona.Id">Detalles</a> 
+                        <a asp-action="Delete" class="btn btn-danger" asp-route-id="@persona.Id">Eliminar</a>
+                  </td>
         </tr>
 }
     </tbody>

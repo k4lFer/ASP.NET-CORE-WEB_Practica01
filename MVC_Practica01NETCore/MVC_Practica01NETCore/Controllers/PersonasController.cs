@@ -31,14 +31,14 @@ namespace MVC_Practica01NETCore.Controllers
             return View();
         }
 
-        // POST: Personas/Create
-        // POST: Personas/Registrar
+        // POST: Personas/Create     
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Nombre,Apellido,TipoDocumento,Dni,CarnetExtranjero,Pasaporte,FechaNacimiento")] Persona persona)
         {
             if (ModelState.IsValid)
             {
+                // Validar la edad, debe ser mayor o igual a 18 años
                 if (CalcularEdad(persona.FechaNacimiento) >= 18)
                 {
                     // Validar el nombre
@@ -56,9 +56,19 @@ namespace MVC_Practica01NETCore.Controllers
                     }
 
                     // Validar el documento
-                    if (!ValidarDocumento(persona.TipoDocumento, persona.Dni))
+                    if (persona.TipoDocumento == "DNI" && !ValidarDocumento("DNI", persona.Dni))
                     {
-                        ModelState.AddModelError("Dni", "Formato de documento incorrecto.");
+                        ModelState.AddModelError("Dni", "Formato de DNI incorrecto.");
+                        return View(persona);
+                    }
+                    else if (persona.TipoDocumento == "Pasaporte" && !ValidarDocumento("Pasaporte", persona.Pasaporte))
+                    {
+                        ModelState.AddModelError("Pasaporte", "Formato de pasaporte incorrecto.");
+                        return View(persona);
+                    }
+                    else if (persona.TipoDocumento == "CarnetExtranjero" && !ValidarDocumento("CarnetExtranjero", persona.CarnetExtranjero))
+                    {
+                        ModelState.AddModelError("CarnetExtranjero", "Formato de Carnet Extranjero incorrecto.");
                         return View(persona);
                     }
 
@@ -81,20 +91,19 @@ namespace MVC_Practica01NETCore.Controllers
                         }
                         return View(persona);
                     }
+
+                    _context.Add(persona);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "La persona debe ser mayor de 18 años para registrarse.");
+                    ModelState.AddModelError("FechaNacimiento", "La persona debe ser mayor de 18 años para registrarse.");
                 }
-
-                _context.Add(persona);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
             }
 
             return View(persona);
         }
-
 
 
         // GET: Personas/Edit/5
@@ -153,7 +162,7 @@ namespace MVC_Practica01NETCore.Controllers
                     {
                         if (!ValidarDocumento(persona.TipoDocumento, persona.Dni))
                         {
-                            ModelState.AddModelError("Dni", "Formato de documento incorrecto.");
+                            ModelState.AddModelError("Dni", "Formato de DNI incorrecto.");
                             return View(persona);
                         }
 
@@ -168,7 +177,7 @@ namespace MVC_Practica01NETCore.Controllers
                     {
                         if (!ValidarDocumento(persona.TipoDocumento, persona.Pasaporte))
                         {
-                            ModelState.AddModelError("Pasaporte", "Formato de documento incorrecto.");
+                            ModelState.AddModelError("Pasaporte", "Formato de pasaporte incorrecto.");
                             return View(persona);
                         }
 
@@ -183,7 +192,7 @@ namespace MVC_Practica01NETCore.Controllers
                     {
                         if (!ValidarDocumento(persona.TipoDocumento, persona.CarnetExtranjero))
                         {
-                            ModelState.AddModelError("CarnetExtranjero", "Formato de documento incorrecto.");
+                            ModelState.AddModelError("CarnetExtranjero", "Formato de Carnet Extranjero incorrecto.");
                             return View(persona);
                         }
 
@@ -273,6 +282,10 @@ namespace MVC_Practica01NETCore.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+
+
+
+        //Funciones
         private bool PersonaExists(Guid id)
         {
             return _context.Personas.Any(e => e.Id == id);
@@ -291,10 +304,7 @@ namespace MVC_Practica01NETCore.Controllers
             return 0; // Otra opción si no se proporciona FechaNacimiento
         }
 
-        private bool DocumentosNoIguales(string dni, string carnetExtranjero, string pasaporte)
-        {
-            return dni != carnetExtranjero && dni != pasaporte && carnetExtranjero != pasaporte;
-        }
+
         private async Task<bool> VerificarDocumentoExistente(Persona persona)
         {
             // Verificar si ya existe un registro con el mismo documento en la base de datos
