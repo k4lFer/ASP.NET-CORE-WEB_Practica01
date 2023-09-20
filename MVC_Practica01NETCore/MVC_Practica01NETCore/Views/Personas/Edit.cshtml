@@ -15,37 +15,44 @@
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
                 <label asp-for="Nombre" class="control-label"></label>
-                <input asp-for="Nombre" class="form-control" />
+                <input asp-for="Nombre" class="form-control" required />
                 <span asp-validation-for="Nombre" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Apellido" class="control-label"></label>
-                <input asp-for="Apellido" class="form-control" />
+                <input asp-for="Apellido" class="form-control" required />
                 <span asp-validation-for="Apellido" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="TipoDocumento" class="control-label"></label>
-                <input asp-for="TipoDocumento" class="form-control" />
+                <select id="TipoDocumento" class="form-control" name="TipoDocumento">
+                    <option value="DNI">DNI</option>
+                    <option value="CarnetExtranjero">CarnetExtranjero</option>
+                    <option value="Pasaporte">Pasaporte</option>
+                </select>
                 <span asp-validation-for="TipoDocumento" class="text-danger"></span>
             </div>
-            <div class="form-group">
+
+            <div class="form-group DNI">
                 <label asp-for="Dni" class="control-label"></label>
-                <input asp-for="Dni" class="form-control" />
+                <input asp-for="Dni" class="form-control" minlength="8" maxlength="8" required />
                 <span asp-validation-for="Dni" class="text-danger"></span>
             </div>
-            <div class="form-group">
+
+            <div class="form-group CarnetExtranjero">
                 <label asp-for="CarnetExtranjero" class="control-label"></label>
-                <input asp-for="CarnetExtranjero" class="form-control" />
+                <input asp-for="CarnetExtranjero" class="form-control" minlength="12" maxlength="12" required />
                 <span asp-validation-for="CarnetExtranjero" class="text-danger"></span>
             </div>
-            <div class="form-group">
+
+            <div class="form-group Pasaporte">
                 <label asp-for="Pasaporte" class="control-label"></label>
-                <input asp-for="Pasaporte" class="form-control" />
+                <input asp-for="Pasaporte" class="form-control" minlength="12" maxlength="12" required />
                 <span asp-validation-for="Pasaporte" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="FechaNacimiento" class="control-label"></label>
-                <input asp-for="FechaNacimiento" class="form-control" type="date"/>
+                <input asp-for="FechaNacimiento" class="form-control" type="date" />
                 <span asp-validation-for="FechaNacimiento" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -56,9 +63,56 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Regresar</a>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        $(document).ready(function () {
+            // Obtiene el valor actual del tipo de documento desde el modelo
+            var selectedOption = '@Model.TipoDocumento';
+
+            // Actualiza el combobox con el valor actual
+            $('#TipoDocumento').val(selectedOption);
+
+            // Maneja el cambio en el combo box
+            $('#TipoDocumento').change(function () {
+                // Obtiene el valor seleccionado
+                var selectedOption = $(this).val();
+
+                // Actualiza el combobox y muestra/oculta campos según el tipo de documento seleccionado
+                updateComboBox(selectedOption);
+            });
+
+            // Llama al evento change para configurar los campos al cargar la página
+            $('#TipoDocumento').change();
+
+            // Función para actualizar el combobox y mostrar/ocultar campos
+            function updateComboBox(selectedOption) {
+                // Actualiza el combobox
+                $('#TipoDocumento').val(selectedOption);
+
+                // Muestra todos los campos
+                $('.DNI, .CarnetExtranjero, .Pasaporte').show();
+
+                // Oculta campos no utilizados según el tipo de documento seleccionado
+                switch (selectedOption) {
+                    case "DNI":
+                        $('.CarnetExtranjero, .Pasaporte').hide();
+                        break;
+                    case "CarnetExtranjero":
+                        $('.DNI, .Pasaporte').hide();
+                        break;
+                    case "Pasaporte":
+                        $('.DNI, .CarnetExtranjero').hide();
+                        break;
+                }
+            }
+        });
+    </script>
+
 }

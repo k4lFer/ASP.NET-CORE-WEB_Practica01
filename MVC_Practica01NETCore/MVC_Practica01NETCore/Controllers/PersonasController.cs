@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -31,6 +32,7 @@ namespace MVC_Practica01NETCore.Controllers
         }
 
         // POST: Personas/Create
+        // POST: Personas/Registrar
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Nombre,Apellido,TipoDocumento,Dni,CarnetExtranjero,Pasaporte,FechaNacimiento")] Persona persona)
@@ -39,25 +41,61 @@ namespace MVC_Practica01NETCore.Controllers
             {
                 if (CalcularEdad(persona.FechaNacimiento) >= 18)
                 {
-                    if (DocumentosNoIguales(persona.Dni, persona.CarnetExtranjero, persona.Pasaporte))
+                    // Validar el nombre
+                    if (!ValidarNombre(persona.Nombre))
                     {
-                        persona.Id = Guid.NewGuid();
-                        _context.Add(persona);
-                        await _context.SaveChangesAsync();
-                        return RedirectToAction(nameof(Index));
+                        ModelState.AddModelError("Nombre", "Formato de nombre incorrecto.");
+                        return View(persona);
                     }
-                    else
+
+                    // Validar el apellido
+                    if (!ValidarApellido(persona.Apellido))
                     {
-                        ModelState.AddModelError(string.Empty, "Los documentos no pueden ser iguales.");
+                        ModelState.AddModelError("Apellido", "Formato de apellido incorrecto.");
+                        return View(persona);
+                    }
+
+                    // Validar el documento
+                    if (!ValidarDocumento(persona.TipoDocumento, persona.Dni))
+                    {
+                        ModelState.AddModelError("Dni", "Formato de documento incorrecto.");
+                        return View(persona);
+                    }
+
+                    // Verificar si el documento ya existe en la base de datos
+                    bool documentoExistente = await VerificarDocumentoExistente(persona);
+
+                    if (documentoExistente)
+                    {
+                        switch (persona.TipoDocumento)
+                        {
+                            case "DNI":
+                                ModelState.AddModelError("Dni", "El DNI ya existe en la base de datos.");
+                                break;
+                            case "Pasaporte":
+                                ModelState.AddModelError("Pasaporte", "El Pasaporte ya existe en la base de datos.");
+                                break;
+                            case "CarnetExtranjero":
+                                ModelState.AddModelError("CarnetExtranjero", "El Carnet Extranjero ya existe en la base de datos.");
+                                break;
+                        }
+                        return View(persona);
                     }
                 }
                 else
                 {
                     ModelState.AddModelError(string.Empty, "La persona debe ser mayor de 18 años para registrarse.");
                 }
+
+                _context.Add(persona);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
             }
+
             return View(persona);
         }
+
+
 
         // GET: Personas/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
@@ -90,29 +128,91 @@ namespace MVC_Practica01NETCore.Controllers
             {
                 if (CalcularEdad(persona.FechaNacimiento) >= 18)
                 {
-                    if (DocumentosNoIguales(persona.Dni, persona.CarnetExtranjero, persona.Pasaporte))
+                    // Validar el nombre
+                    if (!ValidarNombre(persona.Nombre))
                     {
-                        try
+                        ModelState.AddModelError("Nombre", "Formato de nombre incorrecto.");
+                        return View(persona);
+                    }
+
+                    // Validar el apellido
+                    if (!ValidarApellido(persona.Apellido))
+                    {
+                        ModelState.AddModelError("Apellido", "Formato de apellido incorrecto.");
+                        return View(persona);
+                    }
+
+                    // Verificar si el número de documento ha cambiado y si es válido
+                    var personaOriginal = await _context.Personas.FirstOrDefaultAsync(p => p.Id == id);
+                    if (personaOriginal == null)
+                    {
+                        return NotFound();
+                    }
+
+                    if (persona.TipoDocumento == "DNI" && persona.Dni != personaOriginal.Dni)
+                    {
+                        if (!ValidarDocumento(persona.TipoDocumento, persona.Dni))
                         {
-                            _context.Update(persona);
-                            await _context.SaveChangesAsync();
+                            ModelState.AddModelError("Dni", "Formato de documento incorrecto.");
+                            return View(persona);
                         }
-                        catch (DbUpdateConcurrencyException)
+
+                        bool documentoExistente = await VerificarDocumentoExistente(persona);
+                        if (documentoExistente)
                         {
-                            if (!PersonaExists(persona.Id))
-                            {
-                                return NotFound();
-                            }
-                            else
-                            {
-                                throw;
-                            }
+                            ModelState.AddModelError("Dni", "El nuevo DNI ya existe en la base de datos.");
+                            return View(persona);
                         }
+                    }
+                    else if (persona.TipoDocumento == "Pasaporte" && persona.Pasaporte != personaOriginal.Pasaporte)
+                    {
+                        if (!ValidarDocumento(persona.TipoDocumento, persona.Pasaporte))
+                        {
+                            ModelState.AddModelError("Pasaporte", "Formato de documento incorrecto.");
+                            return View(persona);
+                        }
+
+                        bool documentoExistente = await VerificarDocumentoExistente(persona);
+                        if (documentoExistente)
+                        {
+                            ModelState.AddModelError("Pasaporte", "El nuevo Pasaporte ya existe en la base de datos.");
+                            return View(persona);
+                        }
+                    }
+                    else if (persona.TipoDocumento == "CarnetExtranjero" && persona.CarnetExtranjero != personaOriginal.CarnetExtranjero)
+                    {
+                        if (!ValidarDocumento(persona.TipoDocumento, persona.CarnetExtranjero))
+                        {
+                            ModelState.AddModelError("CarnetExtranjero", "Formato de documento incorrecto.");
+                            return View(persona);
+                        }
+
+                        bool documentoExistente = await VerificarDocumentoExistente(persona);
+                        if (documentoExistente)
+                        {
+                            ModelState.AddModelError("CarnetExtranjero", "El nuevo Carnet Extranjero ya existe en la base de datos.");
+                            return View(persona);
+                        }
+                    }
+
+                    // Actualizar todos los campos de la entidad original con los valores del modelo persona
+                    _context.Entry(personaOriginal).CurrentValues.SetValues(persona);
+
+                    try
+                    {
+                        await _context.SaveChangesAsync();
                         return RedirectToAction(nameof(Index));
                     }
-                    else
+                    catch (DbUpdateConcurrencyException)
                     {
-                        ModelState.AddModelError(string.Empty, "Los documentos no pueden ser iguales.");
+                        if (!PersonaExists(persona.Id))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
                     }
                 }
                 else
@@ -120,8 +220,11 @@ namespace MVC_Practica01NETCore.Controllers
                     ModelState.AddModelError(string.Empty, "La persona debe ser mayor de 18 años para editar sus datos.");
                 }
             }
+
             return View(persona);
         }
+
+
 
         // GET: Personas/Details/5
         public async Task<IActionResult> Details(Guid? id)
@@ -191,6 +294,51 @@ namespace MVC_Practica01NETCore.Controllers
         private bool DocumentosNoIguales(string dni, string carnetExtranjero, string pasaporte)
         {
             return dni != carnetExtranjero && dni != pasaporte && carnetExtranjero != pasaporte;
+        }
+        private async Task<bool> VerificarDocumentoExistente(Persona persona)
+        {
+            // Verificar si ya existe un registro con el mismo documento en la base de datos
+            return await _context.Personas.AnyAsync(p =>
+                (persona.TipoDocumento == "DNI" && p.Dni == persona.Dni) ||
+                (persona.TipoDocumento == "Pasaporte" && p.Pasaporte == persona.Pasaporte) ||
+                (persona.TipoDocumento == "CarnetExtranjero" && p.CarnetExtranjero == persona.CarnetExtranjero)
+            );
+        }
+
+        // Función para validar el nombre
+        private bool ValidarNombre(string nombre)
+        {
+            var nombreRegex = new Regex(@"^[A-Z][a-zA-Z]*( [A-Z][a-zA-Z]*){0,1}$");
+            return !string.IsNullOrEmpty(nombre) && nombreRegex.IsMatch(nombre);
+        }
+
+        // Función para validar el apellido
+        private bool ValidarApellido(string apellido)
+        {
+            var apellidoRegex = new Regex(@"^[A-Z][a-zA-Z]* [A-Z][a-zA-Z]*$");
+            return !string.IsNullOrEmpty(apellido) && apellidoRegex.IsMatch(apellido);
+        }
+
+        // Función para validar el documento
+        private bool ValidarDocumento(string tipoDocumento, string documento)
+        {
+            if (string.IsNullOrEmpty(documento))
+            {
+                return false;
+            }
+
+            var dniRegex = new Regex(@"^\d{8}$");
+            var otrosDocumentosRegex = new Regex(@"^\d{12}$");
+
+            if (tipoDocumento == "DNI")
+            {
+                return dniRegex.IsMatch(documento);
+            }
+            else if (tipoDocumento == "Pasaporte" || tipoDocumento == "CarnetExtranjero")
+            {
+                return otrosDocumentosRegex.IsMatch(documento);
+            }
+            return false;
         }
     }
 }

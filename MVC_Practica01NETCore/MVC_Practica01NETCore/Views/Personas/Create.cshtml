@@ -14,35 +14,15 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Nombre" class="control-label"></label>
-                <input asp-for="Nombre" class="form-control" />
+                <input asp-for="Nombre" class="form-control" require/>
                 <span asp-validation-for="Nombre" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Apellido" class="control-label"></label>
-                <input asp-for="Apellido" class="form-control" />
+                <input asp-for="Apellido" class="form-control" require/>
                 <span asp-validation-for="Apellido" class="text-danger"></span>
             </div>
-           <!-- <div class="form-group">
-                <label asp-for="TipoDocumento" class="control-label"></label>
-                <input asp-for="TipoDocumento" class="form-control" />
-                <span asp-validation-for="TipoDocumento" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Dni" class="control-label"></label>
-                <input asp-for="Dni" class="form-control" />
-                <span asp-validation-for="Dni" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CarnetExtranjero" class="control-label"></label>
-                <input asp-for="CarnetExtranjero" class="form-control" />
-                <span asp-validation-for="CarnetExtranjero" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Pasaporte" class="control-label"></label>
-                <input asp-for="Pasaporte" class="form-control" />
-                <span asp-validation-for="Pasaporte" class="text-danger"></span>
-            </div>
-            -->
+
             <div class="form-group">
                 <label asp-for="TipoDocumento" class="control-label"></label>
                 <select id="TipoDocumento" class="form-control" name="TipoDocumento">
@@ -55,19 +35,19 @@
 
             <div class="form-group DNI">
                 <label asp-for="Dni" class="control-label"></label>
-                <input asp-for="Dni" class="form-control" />
+                <input asp-for="Dni" class="form-control" require/>
                 <span asp-validation-for="Dni" class="text-danger"></span>
             </div>
 
             <div class="form-group CarnetExtranjero">
                 <label asp-for="CarnetExtranjero" class="control-label"></label>
-                <input asp-for="CarnetExtranjero" class="form-control" />
+                <input asp-for="CarnetExtranjero" class="form-control" require/>
                 <span asp-validation-for="CarnetExtranjero" class="text-danger"></span>
             </div>
 
             <div class="form-group Pasaporte">
                 <label asp-for="Pasaporte" class="control-label"></label>
-                <input asp-for="Pasaporte" class="form-control" />
+                <input asp-for="Pasaporte" class="form-control" require/>
                 <span asp-validation-for="Pasaporte" class="text-danger"></span>
             </div>
 
@@ -95,22 +75,21 @@
 
     <script>
         $(document).ready(function () {
-            // Oculta los campos de Tarjeta de Extranjería y Pasaporte al cargar la página
-            $('.CarnetExtranjero, .Pasaporte').hide();
+            // Oculta todos los campos al cargar la página, excepto DNI
+            $('.CarnetExtranjero, .Pasaporte').hide().prop('disabled', true);
 
             // Maneja el cambio en el combo box
             $('#TipoDocumento').change(function () {
-                // Oculta todos los campos relacionados con tipos de documentos
-                $('.DNI, .CarnetExtranjero, .Pasaporte').hide();
+                // Oculta y desactiva todos los campos relacionados con tipos de documentos
+                $('.DNI, .CarnetExtranjero, .Pasaporte').hide().prop('disabled', true);
 
-                // Muestra el campo correspondiente al tipo de documento seleccionado
+                // Muestra y activa el campo correspondiente al tipo de documento seleccionado
                 var selectedOption = $(this).val();
-                $('.' + selectedOption).show();
-              
+                $('.' + selectedOption).show().prop('disabled', false);
             });
 
-            // Muestra el campo DNI por defecto
-           $('.DNI').show();
+            // Muestra y activa el campo DNI por defecto
+            $('.DNI').show().prop('disabled', false);
         });
     </script>
 }
