@@ -1,5 +1,5 @@
 # ASP.NET-CORE-WEB_Practica01
-#EJERCICIOS PROPUESTO
+#EJERCICIOS PROPUESTO#
     Realizar un CRUD en C# con el patrón de arquitectura MVC (Modelo Vista Controlador) sobre un entorno web con una base de datos SQL Server, considerando los siguientes atributos.
     Nombre
     Apellido
