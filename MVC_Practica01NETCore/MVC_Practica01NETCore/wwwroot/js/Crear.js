@@ -1,17 +1,17 @@
 ﻿
 $(document).ready(function () {
-    // Expresiones regulares para validación
+
+
     var dniRegex = /^\d{8}$/;
     var otrosDocumentosRegex = /^\d{12}$/;
     var nombreRegex = /^[A-Z][a-zA-Z]*( [A-Z][a-zA-Z]*)*$/;
-
     //var nombreRegex = /^[A-Z][a-zA-Z]*( [A-Z][a-zA-Z]*){0,1}$/;
     var apellidoRegex = /^[A-Z][a-zA-Z]* [A-Z][a-zA-Z]*$/;
 
-    // Ocultar y desactivar los campos CarnetExtranjero y Pasaporte inicialmente
+  
     $('.CarnetExtranjero, .Pasaporte').hide().prop('disabled', true);
 
-    // Obtener los campos de entrada
+ 
     var campos = {
         Dni: {
             regex: dniRegex,
@@ -41,7 +41,7 @@ $(document).ready(function () {
     };
 
     // Obtener el botón de envío
-    var submitButton = $('input[type="submit"]');
+    //var submitButton = $('input[type="submit"]');
 
     // Función para validar un campo y mostrar mensajes de error
     function validarCampo(input, campo) {
@@ -74,7 +74,7 @@ $(document).ready(function () {
                     }
                 }
             });
-            submitButton.prop('disabled', !isValid);
+            //submitButton.prop('disabled', !isValid);
         });
     });
 
@@ -94,7 +94,7 @@ $(document).ready(function () {
 
         // Valida los campos al cambiar el tipo de documento
         campos[$(this).val()].errorSpan.text('');
-        submitButton.prop('disabled', false);
+        //submitButton.prop('disabled', false);
     });
 
     // Validar el botón de envío inicialmente

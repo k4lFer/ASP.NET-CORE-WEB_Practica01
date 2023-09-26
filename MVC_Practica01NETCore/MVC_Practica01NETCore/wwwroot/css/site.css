@@ -24,3 +24,18 @@ body {
 .Centrar {
     text-align: center;
 }
+.createForm {
+    position:relative;     
+    border: 0.2em solid #414141;
+    border-radius: 2em;
+    padding: 0.5em;
+    font-family:Arial;
+}
+
+.editForm {
+    position: relative;
+    border: 0.2em solid #414141;
+    border-radius: 2em;
+    padding: 0.5em;
+    font-family: Arial;
+}

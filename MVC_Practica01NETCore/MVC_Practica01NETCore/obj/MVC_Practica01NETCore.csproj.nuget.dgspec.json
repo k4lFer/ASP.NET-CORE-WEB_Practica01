@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Escritorio\\Semestre 2023-2\\Desarrollo de Software 2\\Practica fix\\MVC_Practica01NETCore\\MVC_Practica01NETCore\\MVC_Practica01NETCore.csproj": {}
+    "D:\\Escritorio\\Semestre 2023-2\\Desarrollo de Software 2\\Practica 1 varios\\Practica fix\\MVC_Practica01NETCore\\MVC_Practica01NETCore\\MVC_Practica01NETCore.csproj": {}
   },
   "projects": {
-    "D:\\Escritorio\\Semestre 2023-2\\Desarrollo de Software 2\\Practica fix\\MVC_Practica01NETCore\\MVC_Practica01NETCore\\MVC_Practica01NETCore.csproj": {
+    "D:\\Escritorio\\Semestre 2023-2\\Desarrollo de Software 2\\Practica 1 varios\\Practica fix\\MVC_Practica01NETCore\\MVC_Practica01NETCore\\MVC_Practica01NETCore.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Escritorio\\Semestre 2023-2\\Desarrollo de Software 2\\Practica fix\\MVC_Practica01NETCore\\MVC_Practica01NETCore\\MVC_Practica01NETCore.csproj",
+        "projectUniqueName": "D:\\Escritorio\\Semestre 2023-2\\Desarrollo de Software 2\\Practica 1 varios\\Practica fix\\MVC_Practica01NETCore\\MVC_Practica01NETCore\\MVC_Practica01NETCore.csproj",
         "projectName": "MVC_Practica01NETCore",
-        "projectPath": "D:\\Escritorio\\Semestre 2023-2\\Desarrollo de Software 2\\Practica fix\\MVC_Practica01NETCore\\MVC_Practica01NETCore\\MVC_Practica01NETCore.csproj",
+        "projectPath": "D:\\Escritorio\\Semestre 2023-2\\Desarrollo de Software 2\\Practica 1 varios\\Practica fix\\MVC_Practica01NETCore\\MVC_Practica01NETCore\\MVC_Practica01NETCore.csproj",
         "packagesPath": "C:\\Users\\kalfe\\.nuget\\packages\\",
-        "outputPath": "D:\\Escritorio\\Semestre 2023-2\\Desarrollo de Software 2\\Practica fix\\MVC_Practica01NETCore\\MVC_Practica01NETCore\\obj\\",
+        "outputPath": "D:\\Escritorio\\Semestre 2023-2\\Desarrollo de Software 2\\Practica 1 varios\\Practica fix\\MVC_Practica01NETCore\\MVC_Practica01NETCore\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

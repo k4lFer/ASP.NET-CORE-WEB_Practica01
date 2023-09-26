@@ -1,10 +1,10 @@
 ﻿@model MVC_Practica01NETCore.Models.Persona
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Detalles";
 }
 
-<h1>Details</h1>
+<h1>Detalles...</h1>
 
 <div>
     <h4>Persona</h4>
@@ -52,9 +52,15 @@
         <dd class = "col-sm-10">
             @string.Format("{0:dd MMMM yyyy}", Model.FechaNacimiento)
         </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Edad)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Edad)
+        </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-warning">Editar</a>
     <a asp-action="Index">Regresar</a>
 </div>

@@ -9,32 +9,36 @@
 <p>
     <a asp-action="Create" class="btn btn-success">Crear nuevo Registro</a>
 </p>
+
+<div class="container-fluid">
+
 <table class="table table-striped">
     <thead>
         <tr>
-            <th>Nombre</th>
-            <th>Apellido</th>
-            <th>Tipo de Documento</th>
-            <th>DNI</th>
-            <th>Carnet Extranjero</th>
-            <th>Pasaporte</th>
-            <th>Fecha de Nacimiento</th>
-            <th>Edad</th>
+            <th class="Centrar">Nombre</th>
+            <th class="Centrar">Apellido</th>
+            <th class="Centrar">Tipo de Documento</th>
+            <th class="Centrar">N° DNI</th>
+            <th class="Centrar">N° Carnet de Extranjeria</th>
+            <th class="Centrar">N° Pasaporte</th>
+            <th class="Centrar">Fecha de Nacimiento</th>
+            <th class="Centrar">Edad</th>
             <th class="Centrar">Acciones</th>
         </tr>
     </thead>
     <tbody>
+
  @foreach (var persona in Model)
         {
             <tr>
                 <td>@Html.DisplayFor(modelItem => persona.Nombre)</td>
                 <td>@Html.DisplayFor(modelItem => persona.Apellido)</td>
-                <td>@Html.DisplayFor(modelItem => persona.TipoDocumento)</td>
-                <td>@Html.DisplayFor(modelItem => persona.Dni)</td>
-                <td>@Html.DisplayFor(modelItem => persona.CarnetExtranjero)</td>
-                <td>@Html.DisplayFor(modelItem => persona.Pasaporte)</td>
-                <td>@(persona.FechaNacimiento.HasValue ? persona.FechaNacimiento.Value.ToString("dd MMMM yyyy") : "")</td>
-                <td>@persona.Edad</td>
+                <td class ="Centrar">@Html.DisplayFor(modelItem => persona.TipoDocumento)</td>
+                <td class="Centrar">@Html.DisplayFor(modelItem => persona.Dni)</td>
+                <td class="Centrar">@Html.DisplayFor(modelItem => persona.CarnetExtranjero)</td>
+                <td class="Centrar">@Html.DisplayFor(modelItem => persona.Pasaporte)</td>
+                <td class="Centrar" >@Html.DisplayFor(modelItem => persona.FechaNacimiento )</td>
+                <td class="Centrar" >@persona.Edad</td>
                    <td class="text-center">
                          <a asp-action="Edit" class = "btn btn-warning" asp-route-id="@persona.Id">Editar</a> 
                         <a asp-action="Details" class="btn btn-info" asp-route-id="@persona.Id">Detalles</a> 
@@ -44,3 +48,4 @@
 }
     </tbody>
 </table>
+</div>

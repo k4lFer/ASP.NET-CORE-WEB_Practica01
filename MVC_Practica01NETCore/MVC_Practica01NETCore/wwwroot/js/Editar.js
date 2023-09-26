@@ -1,5 +1,5 @@
 ﻿$(document).ready(function () {
-    // Expresiones regulares para validación
+
     var dniRegex = /^\d{8}$/;
     var otrosDocumentosRegex = /^\d{12}$/;
     var nombreRegex = /^[A-Z][a-zA-Z]*( [A-Z][a-zA-Z]*)*$/;
@@ -36,7 +36,7 @@
 
     // Obtener el ComboBox y el botón de envío utilizando la variable tipoDocumento
     var tipoDocumento = document.getElementById("TipoDocumento");
-    var submitButton = document.querySelector('input[type="submit"]');
+    //var submitButton = document.querySelector('input[type="submit"]');
 
     // Función para validar un campo y mostrar mensajes de error
     function validarCampo(input, campo) {
@@ -69,7 +69,7 @@
                     }
                 }
             });
-            submitButton.disabled = !isValid;
+            
         });
     });
 
@@ -89,7 +89,7 @@
             campo.disabled = false;
         });
 
-        // Limpiar los mensajes de error
+
         Object.keys(campos).forEach(function (campoId) {
             if (campoId !== selectedTipoDocumento) {
                 campos[campoId].errorSpan.textContent = '';
@@ -98,7 +98,7 @@
 
         // Validar los campos al cambiar el tipo de documento
         campos[selectedTipoDocumento].errorSpan.textContent = '';
-        submitButton.disabled = false;
+        
     });
 
     // Validar campos cuando se carga la página

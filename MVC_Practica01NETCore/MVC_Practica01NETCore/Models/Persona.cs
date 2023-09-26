@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MVC_Practica01NETCore.Models;
@@ -20,6 +21,7 @@ public partial class Persona
 
     public string? Pasaporte { get; set; }
 
+    [DisplayFormat(DataFormatString = "{0:dd MMMM yyyy}")]
     public DateTime? FechaNacimiento { get; set; }
 
 
